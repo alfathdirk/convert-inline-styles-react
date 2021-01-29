@@ -5,7 +5,7 @@ this tools for parsing inline style your code into single file
 ## How to Use
 
 ```bash
-npm i -g conver-inline-styles-react
+npm i -g convert-inline-styles-react
 
 # do it in your current working directory
 convert-styles sample_file.js
