@@ -1,0 +1,14 @@
+{
+  "name": "convert-inline-styles-react",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "bin": {
+    "convert-styles": "./bin/convert-styles.js"
+  }
+}
