@@ -8,11 +8,11 @@ this tools for parsing inline style your code into single file
 npm i -g conver-inline-styles-react
 
 # do it in your current working directory
-convert-styles yourFileName.js
+convert-styles sample_file.js
 ```
 
 ```js
-// sample.js
+// sample_file.js
 
 <View style={{ marginBottom: 20 }} />
 // automaticaly refactored to
@@ -20,7 +20,7 @@ convert-styles yourFileName.js
 ```
 
 ```js
-// sample_style.js, this file is created automatically
+// sample_file_style.js, this file is created automatically
 
 import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
