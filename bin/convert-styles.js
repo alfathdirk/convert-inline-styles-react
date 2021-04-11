@@ -2,45 +2,63 @@
 
 const fs = require('fs');
 const { cwd } = require('process');
-var fileArg = process.argv.slice(2)[0];
-
+const beautify = require('js-beautify').js;
+const fileArg = process.argv.slice(2)[0];
 if (fileArg) {
     let filePathLocation = cwd() + '/' + fileArg;
     let stringFile = fs.readFileSync(filePathLocation, { encoding: 'utf-8'});
-    let newStr = '';
-    try {
-        stringFile.match(/style=\{{(.*?)\}}/gms).map((v,k) => {
-            newStr += v.replace(/^style=({)(.*)(\})$/gms, `style${k + 1}: $2,\n`)
-        })
+    // let newStr = '';
+    let idx = 0;
+    let objStyles = [];
+    let reg = /style=\{{(.*?)\}}/gms;
+    let match = reg.exec(stringFile);
+    let styleFile = '';
 
-        let matcheds = 0;
-        let replaceFile = stringFile.replace(/\{{(.*?)\}}/gms, (matched) => {
-            matcheds++
-            return `{styles.style${matcheds}}`
+    try {
+        do {
+            let objStyle = match[1].replace(/\s/gm,'');
+            let getIdx = objStyles.indexOf(objStyle);
+            match[0].replace(new RegExp(reg), () => {
+                if(getIdx < 0) {
+                    objStyles.push(objStyle)
+                    idx+=1;
+                    styleFile += `style${idx}: {${objStyle}},`
+                } 
+            });
+        } while((match = reg.exec(stringFile)) !== null);
+
+        // replacing file
+        let i = 0;
+        let styles = [];
+        let replaceFile = stringFile.replace(reg, (matched) => {
+            let trimStyles = matched.replace(/\s/gm,'');
+            let idxOfStyles = styles.indexOf(trimStyles);
+            if( idxOfStyles < 0) {
+                styles.push(trimStyles);
+                i+=1;
+                return `style={styles.style${i}}`
+            } else {
+                return `style={styles.style${idxOfStyles + 1}}`
+            }
         });
+
+        let resultStyle = beautify(`let style = {${styleFile}}`, {indent_size: 2});
 
         fs.writeFile(filePathLocation, replaceFile, (err) => {
             if (err) throw err;
-            console.log('Saved file!');
+            console.info('Saved file!');
         })
 
-        let newFileStyle = `import {StyleSheet} from 'react-native';\nconst styles = StyleSheet.create({${newStr}})\n\nexport default styles;`;
-
-        fs.writeFile(filePathLocation.substring(0,filePathLocation.length - 3) + '_styles.js', newFileStyle, (err) => {
+        fs.writeFile(filePathLocation.substring(0,filePathLocation.length - 3) + '_styles.js', resultStyle, (err) => {
             if (err) throw err;
-            console.log('Saved style!');
+            console.info('Saved style!');
         })
 
     } catch (error) {
-        console.log('File Bersih dari inline Style');
+        console.info('File Bersih dari inline Style', error.message);
     }
     return;
 } 
 
+
 console.info('Please input filename!');
-
-
-
-// // let x = bracketMatches.replace(/\{{(.*?)\}}/gms, '**')
-
-// // console.log(bracketMatches);

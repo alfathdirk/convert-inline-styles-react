@@ -1,6 +1,6 @@
 {
   "name": "convert-inline-styles-react",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,5 +10,8 @@
   "license": "MIT",
   "bin": {
     "convert-styles": "./bin/convert-styles.js"
+  },
+  "dependencies": {
+    "js-beautify": "^1.13.5"
   }
 }
