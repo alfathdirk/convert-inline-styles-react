@@ -16,7 +16,8 @@ if (fileArg) {
 
     try {
         do {
-            let objStyle = match[1].replace(/\s/gm,'');
+            let objStyle = match[1].replace(/\s|\/\/.*?,/gm,'');
+            console.log(objStyle);
             let getIdx = objStyles.indexOf(objStyle);
             match[0].replace(new RegExp(reg), () => {
                 if(getIdx < 0) {
@@ -43,16 +44,17 @@ if (fileArg) {
         });
 
         let resultStyle = beautify(`let style = {${styleFile}}`, {indent_size: 2});
-
         fs.writeFile(filePathLocation, replaceFile, (err) => {
             if (err) throw err;
             console.info('Saved file!');
         })
-
-        fs.writeFile(filePathLocation.substring(0,filePathLocation.length - 3) + '_styles.js', resultStyle, (err) => {
-            if (err) throw err;
-            console.info('Saved style!');
-        })
+        
+        console.log(resultStyle);
+        
+        // fs.writeFile(filePathLocation.substring(0,filePathLocation.length - 3) + '_styles.js', resultStyle, (err) => {
+        //     if (err) throw err;
+        //     console.info('Saved style!');
+        // })
 
     } catch (error) {
         console.info('File Bersih dari inline Style', error.message);
